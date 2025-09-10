@@ -1,0 +1,44 @@
+DESCRIPTION:
+IoT-based home automation with voice control lets users operate home appliances through voice commands using Google Assistant/Alexa. It provides comfort, energy saving, and smart living by connecting devices via Wi-Fi and a microcontroller.
+CODING:
+#define BLYNK_PRINT Serial
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+char auth[] = "Your_Blynk_Auth_Token";  // From Blynk App
+char ssid[] = "Your_WiFi_Name";         // WiFi SSID
+char pass[] = "Your_WiFi_Password";     // WiFi Password
+
+// Relay Pins
+int light = D1;
+int fan   = D2;
+
+void setup()
+{
+  Serial.begin(9600);
+  Blynk.begin(auth, ssid, pass);
+
+  pinMode(light, OUTPUT);
+  pinMode(fan, OUTPUT);
+
+  digitalWrite(light, LOW);
+  digitalWrite(fan, LOW);
+}
+
+// Voice commands via Blynk button widgets
+BLYNK_WRITE(V1)  // Light Control
+{
+  int pinValue = param.asInt();
+  digitalWrite(light, pinValue);
+}
+
+BLYNK_WRITE(V2)  // Fan Control
+{
+  int pinValue = param.asInt();
+  digitalWrite(fan, pinValue);
+}
+
+void loop()
+{
+  Blynk.run();
+}
